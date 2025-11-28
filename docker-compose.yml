@@ -3,7 +3,7 @@ services:
     image: docker.n8n.io/n8nio/n8n:latest
     container_name: n8n
     ports:
-      - "33333:5678"
+      - "5678:5678"
     env_file:
       - .env
     volumes:
