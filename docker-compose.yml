@@ -8,7 +8,7 @@ services:
       - .env
     volumes:
       - n8n_data:/home/node/.n8n
-      - n8n_scenes:/home/node/n8n_scenes
+      - n8n_data:/home/node/n8n_scenes
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:5678/healthz"]
@@ -19,6 +19,4 @@ services:
 
 volumes:
   n8n_data:
-    external: true
-  n8n_scenes:
     external: true
