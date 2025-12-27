@@ -1,11 +1,17 @@
-# Use the latest stable n8n image
+# Stage 1: Install ffmpeg in Alpine
+FROM alpine:3.19 AS ffmpeg-builder
+RUN apk add --no-cache ffmpeg
+
+# Stage 2: Use n8n image
 FROM docker.n8n.io/n8nio/n8n:2.1.4
 
 # Switch to root to copy and set permissions
 USER root
 
-# Install ffmpeg
-RUN apt-get update && apt-get install -y ffmpeg && apt-get clean && rm -rf /var/lib/apt/lists/*
+# Copy ffmpeg from the builder stage
+COPY --from=ffmpeg-builder /usr/bin/ffmpeg /usr/bin/ffmpeg
+COPY --from=ffmpeg-builder /usr/bin/ffprobe /usr/bin/ffprobe
+COPY --from=ffmpeg-builder /usr/lib /usr/lib
 
 # Copy start script to home directory (writable by node user)
 COPY --chown=node:node start.sh /home/node/start.sh
