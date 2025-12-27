@@ -5,7 +5,7 @@ FROM docker.n8n.io/n8nio/n8n:2.1.4
 USER root
 
 # Install ffmpeg
-RUN apk add --no-cache ffmpeg
+RUN apt-get update && apt-get install -y ffmpeg && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy start script to home directory (writable by node user)
 COPY --chown=node:node start.sh /home/node/start.sh
