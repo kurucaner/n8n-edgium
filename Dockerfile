@@ -27,6 +27,9 @@ COPY --chown=node:node assets /home/node/assets
 # Create .n8n-files directory
 RUN mkdir -p /home/node/.n8n-files && chown -R node:node /home/node/.n8n-files
 
+# Install ElevenLabs
+RUN npm install -g @elevenlabs/n8n-nodes-elevenlabs
+
 # Switch back to node user
 USER node
 
