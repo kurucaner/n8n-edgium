@@ -10,6 +10,9 @@ RUN apk add --no-cache curl xz && \
 # Stage 2: Use n8n image
 FROM docker.n8n.io/n8nio/n8n:2.1.4
 
+# Install dependencies
+RUN cd /usr/local/lib/node_modules/n8n && npm install @elevenlabs/n8n-nodes-elevenlabs
+
 # Switch to root to copy and set permissions
 USER root
 
@@ -26,9 +29,6 @@ COPY --chown=node:node assets /home/node/assets
 
 # Create .n8n-files directory
 RUN mkdir -p /home/node/.n8n-files && chown -R node:node /home/node/.n8n-files
-
-# Install ElevenLabs
-RUN npm install -g @elevenlabs/n8n-nodes-elevenlabs
 
 # Switch back to node user
 USER node
