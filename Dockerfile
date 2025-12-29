@@ -10,31 +10,28 @@ RUN apk add --no-cache curl xz && \
 # Stage 2: Use n8n image
 FROM docker.n8n.io/n8nio/n8n:2.1.4
 
-# Install dependencies
-RUN cd /usr/local/lib/node_modules/n8n && npm install @elevenlabs/n8n-nodes-elevenlabs
-
-# Switch to root to copy and set permissions
+# Switch to root for setup
 USER root
 
-# Copy static ffmpeg binaries from the builder stage
+# 1. Create the nodes directory and install the community package
+# We install to /home/node/.n8n/nodes to avoid workspace protocol conflicts
+RUN mkdir -p /home/node/.n8n/nodes && \
+    cd /home/node/.n8n/nodes && \
+    npm init -y && \
+    npm install @elevenlabs/n8n-nodes-elevenlabs && \
+    chown -R node:node /home/node/.n8n
+
+# 2. Copy static ffmpeg binaries from the builder stage
 COPY --from=ffmpeg-builder /usr/local/bin/ffmpeg /usr/local/bin/ffmpeg
 COPY --from=ffmpeg-builder /usr/local/bin/ffprobe /usr/local/bin/ffprobe
 
-# Copy start script to home directory (writable by node user)
+# 3. Setup files and permissions
 COPY --chown=node:node start.sh /home/node/start.sh
 RUN chmod +x /home/node/start.sh
-
-# Copy assets directory
 COPY --chown=node:node assets /home/node/assets
-
-# Create .n8n-files directory
 RUN mkdir -p /home/node/.n8n-files && chown -R node:node /home/node/.n8n-files
 
 # Switch back to node user
 USER node
-
-# Expose the default n8n port
 EXPOSE 5678
-
-# Use the start script as entrypoint
 ENTRYPOINT ["/home/node/start.sh"]
