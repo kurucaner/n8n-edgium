@@ -8,7 +8,7 @@ RUN apk add --no-cache curl xz && \
     chmod +x /usr/local/bin/ffmpeg /usr/local/bin/ffprobe
 
 # Stage 2: Use n8n image
-FROM docker.n8n.io/n8nio/n8n:2.1.4
+FROM docker.n8n.io/n8nio/n8n:2.2.4
 
 # Switch to root for setup
 USER root
