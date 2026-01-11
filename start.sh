@@ -7,4 +7,3 @@ fi
 
 # Start n8n
 exec n8n start
-
