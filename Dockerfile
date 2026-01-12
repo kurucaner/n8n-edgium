@@ -28,8 +28,8 @@ COPY --from=ffmpeg-builder /usr/local/bin/ffprobe /usr/local/bin/ffprobe
 # 3. Setup files and permissions
 COPY --chown=node:node start.sh /home/node/start.sh
 RUN chmod +x /home/node/start.sh
-COPY --chown=node:node assets /home/node/assets
 RUN mkdir -p /home/node/.n8n-files && chown -R node:node /home/node/.n8n-files
+COPY --chown=node:node assets /home/node/.n8n-files/assets
 
 # Switch back to node user
 USER node
